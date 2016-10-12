@@ -19,49 +19,51 @@ class QuitMerge:
         print(local)
         print(remote)
 
-        with open(base) as fO:
-            for line in fO:
+        print ("base")
+        with open(base) as fileBase:
+            for line in fileBase:
                 print(line)
 
-        print ("diff O:A")
-        fO = open(base, 'r')
-        fA = open(local, 'r')
-        delta = self.delta(fO, fA)
-        fO.close()
-        fA.close()
+        print ("local")
+        with open(local) as fileBase:
+            for line in fileBase:
+                print(line)
 
-        print ("set")
-        print ("add")
-        for line in delta["add"]:
+        print ("remote")
+        with open(remote) as fileBase:
+            for line in fileBase:
+                print(line)
+
+        fileBase = open(base, 'r')
+        fileLocal = open(local, 'r')
+        fileRemote = open(remote, 'r')
+
+        # use list() instead of readlines() resp. I use set() in this case
+        # https://stupidpythonideas.blogspot.de/2013/06/readlines-considered-silly.html
+
+        addA = list(set(fileLocal) - set(fileBase))
+        addB = list(set(fileRemote) - set(fileBase))
+        intersect = set(fileLocal).intersection(set(fileRemote))
+        fileBase.close()
+        fileLocal.close()
+        fileRemote.close()
+
+        merged = sorted(intersect.union(addA).union(addB))
+        # remote blank lines
+        merged = list(filter(lambda line: line.strip(), merged))
+
+        print ("merged")
+        for line in merged:
             print(line)
-        print ("delete")
-        for line in delta["delete"]:
-            print(line)
 
-
-        print ("diff O:B")
-
-        fO = open(base, 'r')
-        fB = open(remote, 'r')
-        delta = self.delta(fO, fB)
-        fO.close()
-        fB.close()
-
-        print ("set")
-        print ("add")
-        for line in delta["add"]:
-            print(line)
-        print ("delete")
-        for line in delta["delete"]:
-            print(line)
+        with open(local, 'w') as fileMerged:
+            fileMerged.writelines(merged)
 
         # merge result has to be written to *local*
 
         return
 
     def delta(self, local, remote):
-        # use list() instead of readlines()
-        # https://stupidpythonideas.blogspot.de/2013/06/readlines-considered-silly.html
         lineDelta = difflib.ndiff(sorted(list(local)), sorted(list(remote)))
         print(lineDelta)
 
