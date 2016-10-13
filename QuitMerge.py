@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import difflib
 import sys
 
 class QuitMerge:
@@ -62,18 +61,3 @@ class QuitMerge:
         # merge result has to be written to *local*
 
         return
-
-    def delta(self, local, remote):
-        lineDelta = difflib.ndiff(sorted(list(local)), sorted(list(remote)))
-        print(lineDelta)
-
-        addSet = []
-        deleteSet = []
-
-        for line in lineDelta:
-            if line.startswith('+ '):
-                addSet.append(line[2:])
-            if line.startswith('- '):
-                deleteSet.append(line[2:])
-
-        return {"add": addSet, "delete": deleteSet}
