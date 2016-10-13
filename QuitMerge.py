@@ -40,8 +40,8 @@ class QuitMerge:
         # use list() instead of readlines() resp. I use set() in this case
         # https://stupidpythonideas.blogspot.de/2013/06/readlines-considered-silly.html
 
-        addA = list(set(fileLocal) - set(fileBase))
-        addB = list(set(fileRemote) - set(fileBase))
+        addA = set(fileLocal) - set(fileBase)
+        addB = set(fileRemote) - set(fileBase)
         intersect = set(fileLocal).intersection(set(fileRemote))
         fileBase.close()
         fileLocal.close()
