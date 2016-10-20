@@ -17,11 +17,12 @@ if __name__ == "__main__":
     parser.add_argument('base', nargs='?', type=str)
     parser.add_argument('local', nargs='?', type=str)
     parser.add_argument('remote', nargs='?', type=str)
+    parser.add_argument('--strategy', default="threeWay", type=str)
 
     args = parser.parse_args()
 
     quitmerge = QuitMerge()
     if (args.base and args.local and args.remote):
-        quitmerge.merge(args.base, args.local, args.remote)
+        quitmerge.merge(args.base, args.local, args.remote, strategy=args.strategy)
     else:
         exit(1)

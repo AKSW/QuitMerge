@@ -1,30 +1,13 @@
-#!/usr/bin/env python3
+from importlib import import_module
 
 class QuitMerge:
 
     def __init__ (self):
         True
 
-    def merge (self, base, local, remote):
-        fileBase = open(base, 'r')
-        fileLocal = open(local, 'r')
-        fileRemote = open(remote, 'r')
+    def merge (self, base, local, remote, strategy="treeway"):
+        module = strategy.title() + "Merge"
+        merge = getattr(import_module(module), module)
 
-        # use list() instead of readlines() resp. I use set() in this case
-        # https://stupidpythonideas.blogspot.de/2013/06/readlines-considered-silly.html
-        addA = set(fileLocal) - set(fileBase)
-        addB = set(fileRemote) - set(fileBase)
-        intersect = set(fileLocal).intersection(set(fileRemote))
-        fileBase.close()
-        fileLocal.close()
-        fileRemote.close()
-
-        merged = sorted(intersect.union(addA).union(addB))
-        # remove blank lines
-        merged = list(filter(lambda line: line.strip(), merged))
-
-        # merge result has to be written to *local*
-        with open(local, 'w') as fileMerged:
-            fileMerged.writelines(merged)
-
-        return
+        merger = merge()
+        return merger.merge(base, local, remote)
