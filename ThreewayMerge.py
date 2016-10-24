@@ -7,16 +7,23 @@ class ThreewayMerge(metaclass=ABCMeta):
         True
 
     def merge (self, base, local, remote):
-        fileBase = open(base, 'r')
-        fileLocal = open(local, 'r')
-        fileRemote = open(remote, 'r')
-
         # use list() instead of readlines() resp. I use set() in this case
         # https://stupidpythonideas.blogspot.de/2013/06/readlines-considered-silly.html
+        fileBase = open(base, 'r')
+        fileLocal = open(local, 'r')
         addA = set(fileLocal) - set(fileBase)
-        addB = set(fileRemote) - set(fileBase)
-        intersect = set(fileLocal).intersection(set(fileRemote))
         fileBase.close()
+        fileLocal.close()
+
+        fileBase = open(base, 'r')
+        fileRemote = open(remote, 'r')
+        addB = set(fileRemote) - set(fileBase)
+        fileBase.close()
+        fileRemote.close()
+
+        fileLocal = open(local, 'r')
+        fileRemote = open(remote, 'r')
+        intersect = set(fileLocal).intersection(set(fileRemote))
         fileLocal.close()
         fileRemote.close()
 
