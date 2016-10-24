@@ -9,23 +9,17 @@ class ThreewayMerge(metaclass=ABCMeta):
     def merge (self, base, local, remote):
         # use list() instead of readlines() resp. I use set() in this case
         # https://stupidpythonideas.blogspot.de/2013/06/readlines-considered-silly.html
-        fileBase = open(base, 'r')
-        fileLocal = open(local, 'r')
-        addA = set(fileLocal) - set(fileBase)
-        fileBase.close()
-        fileLocal.close()
+        with open(base, 'r') as fileBase:
+            with open(local, 'r') as fileLocal:
+                addA = set(fileLocal) - set(fileBase)
 
-        fileBase = open(base, 'r')
-        fileRemote = open(remote, 'r')
-        addB = set(fileRemote) - set(fileBase)
-        fileBase.close()
-        fileRemote.close()
+        with open(base, 'r') as fileBase:
+            with open(remote, 'r') as fileRemote:
+                addB = set(fileRemote) - set(fileBase)
 
-        fileLocal = open(local, 'r')
-        fileRemote = open(remote, 'r')
-        intersect = set(fileLocal).intersection(set(fileRemote))
-        fileLocal.close()
-        fileRemote.close()
+        with open(local, 'r') as fileLocal:
+            with open(remote, 'r') as fileRemote:
+                intersect = set(fileLocal).intersection(set(fileRemote))
 
         merged = sorted(intersect.union(addA).union(addB))
         # remove blank lines
